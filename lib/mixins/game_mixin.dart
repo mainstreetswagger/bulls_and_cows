@@ -10,6 +10,12 @@ class GameLogic {
   static String _cows = 'cows';
   static String _result;
 
+  // final refreshGame =
+  //     StreamTransformer.fromHandlers(handleDone: (EventSink<String> sink) {
+  //   getRandom(_length);
+  //   sink.add('game refreshed');
+  // });
+
   final gameStreamTransformer = StreamTransformer.fromHandlers(
       handleData: (String clientValue, EventSink<String> sink) {
     String validationResult = ValidationMixin.validateFourDigit(clientValue);
@@ -25,7 +31,6 @@ class GameLogic {
       } else {
         _result =
             'you entered: $clientValue. matches => bulls: ${matches[_bulls]}, cows: ${matches[_cows]}';
-        print(_result);
         sink.add(_result);
       }
     } else {
@@ -48,13 +53,7 @@ class GameLogic {
   }
 
   static List<int> convertToListOfInts(String number) {
-    List<String> listStr = number.split('');
-    List<int> listInt = [];
-    listInt.length = listStr.length;
-    for (int i = 0; i < listStr.length; i++) {
-      listInt[i] = int.parse(listStr[i]);
-    }
-    return listInt;
+    return number.split('').map((e) => int.parse(e)).toList();
   }
 
   static Map<String, int> checkBullsAndCows(List<int> guessNumber) {
@@ -72,7 +71,6 @@ class GameLogic {
       }
       matches[_bulls] = bulls;
       matches[_cows] = cows;
-      print(matches);
       return matches;
     } else {
       throw new Exception('first call getRandom()');

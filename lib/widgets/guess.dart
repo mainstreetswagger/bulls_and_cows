@@ -26,7 +26,7 @@ class _GuessTextFieldState extends State<GuessTextField> {
           // key: _formKey,
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 form(),
                 SizedBox(height: media.size.height * .02),
@@ -42,61 +42,102 @@ class _GuessTextFieldState extends State<GuessTextField> {
     return StreamBuilder(
         stream: bloc.clientsNumber,
         builder: (context, snapshot) {
-          return Row(children: [
-            Expanded(flex: 7, child: fourDigitField(snapshot)),
-            Expanded(flex: 1, child: Container()),
-            Expanded(flex: 2, child: buttonCheck(snapshot)),
+          return Column(children: [
+            Row(
+              children: [
+                Expanded(flex: 7, child: fourDigitField(snapshot)),
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(height: media.size.height * .02),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(flex: 1, child: buttonCheck(snapshot)),
+                Expanded(flex: 2, child: SizedBox()),
+                Expanded(flex: 1, child: buttonRefresh()),
+              ],
+            ),
           ]);
         });
   }
 
   Widget fourDigitField(AsyncSnapshot snapshot) {
-    return TextFormField(
-        onChanged: (newValue) {
-          bloc.changeClientsNumber(newValue);
-        },
-        keyboardType: TextInputType.number,
-        style: TextStyle(color: Colors.blueGrey),
-        textAlign: TextAlign.start,
-        decoration: InputDecoration(
-            errorText: snapshot.error,
-            labelStyle: TextStyle(
-                color: Colors.deepPurple.shade900, fontWeight: FontWeight.bold),
-            labelText: '4-digits',
-            hintText: 'enter four digits',
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(color: Colors.deepPurple, width: 2.0)),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide:
-                    BorderSide(color: Colors.deepPurpleAccent, width: 2.0)),
-            prefixIcon:
-                const Icon(Icons.calculate, color: Colors.deepPurpleAccent)));
+    return SizedBox(
+      width: 50.0,
+      height: 50.0,
+      child: TextFormField(
+          onChanged: (newValue) {
+            bloc.changeClientsNumber(newValue);
+          },
+          keyboardType: TextInputType.number,
+          style: TextStyle(color: Colors.blueGrey),
+          textAlign: TextAlign.start,
+          decoration: InputDecoration(
+              errorText: snapshot.error,
+              labelStyle: TextStyle(
+                  color: Colors.deepPurple.shade900,
+                  fontWeight: FontWeight.bold),
+              labelText: '4-digits',
+              hintText: 'enter four digits',
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(color: Colors.deepPurple, width: 2.0)),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide:
+                      BorderSide(color: Colors.deepPurpleAccent, width: 2.0)),
+              prefixIcon:
+                  const Icon(Icons.calculate, color: Colors.deepPurpleAccent))),
+    );
   }
 
   Widget buttonCheck(AsyncSnapshot snapshot) {
-    var _onPressed = null;
+    var _onPressed;
     if (snapshot.hasData) {
       _onPressed = () {
-        print(_logs);
         setState(() {
           _logs.add(snapshot.data);
         });
       };
     }
-    return ElevatedButton(
-      style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0))),
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurple)),
-      child: Text('Check', style: TextStyle(color: Colors.red.shade500)),
-      onPressed: _onPressed,
-      // () {
-      //   addMessageRow('message');
-      //   // if (_formKey.currentState.validate()) {}
-      // },
+    return SizedBox(
+      width: 50.0,
+      height: 50.0,
+      child: ElevatedButton(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0))),
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.deepPurple)),
+        child: Text('Check', style: TextStyle(color: Colors.red.shade500)),
+        onPressed: _onPressed,
+      ),
+    );
+  }
+
+  Widget buttonRefresh() {
+    var _onPressed = () {
+      setState(() {
+        _logs.clear();
+      });
+    };
+    return SizedBox(
+      width: 50.0,
+      height: 50.0,
+      child: ElevatedButton(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0))),
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.deepPurple)),
+        child: Text('Refresh', style: TextStyle(color: Colors.red.shade500)),
+        onPressed: _onPressed,
+      ),
     );
   }
 
@@ -137,7 +178,7 @@ class _GuessTextFieldState extends State<GuessTextField> {
               children: [
                 SizedBox(height: media.size.height * .01),
                 Text(
-                  'attempt: $index => ${_logs[index]}',
+                  'attempt: ${index + 1} => ${_logs[index]}',
                   style: TextStyle(
                       color: Colors.purple,
                       fontSize: 18.0,
